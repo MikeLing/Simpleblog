@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import login_user, logout_user, current_user, login_required
@@ -9,7 +12,6 @@ from . import auth
 from ..user.forms import SearchForm
 
 
-# 用户最后一次访问时间,全文搜索
 @auth.before_request
 def before_request():
     if current_user.is_authenticated:

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 from flask import redirect, render_template, current_app, request, g, flash, url_for
 from flask_login import login_required, current_user
@@ -9,7 +12,6 @@ from . import message
 from .forms import LetterForm
 
 
-# 用户最后一次访问时间,全文搜索
 @message.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -24,7 +26,7 @@ def comment_message():
     user = User.query.filter_by(id=current_user.id).first()
     all_post = user.posts.order_by(Post.timestamp.desc()).all()
     posts = [post for post in all_post if post.draft == False]
-    # 每篇文章的评论，赞是一个列表集合
+
     i = [post.comments for post in posts]
     x, comments = 0, []
     if i != []:
@@ -108,7 +110,7 @@ def follow_message():
                            comments=len(comments),
                            likes=len(likes),
                            follows=follows)
-# 私信箱
+
 @message.route('/letter')
 @login_required
 def letter_message():
@@ -151,7 +153,6 @@ def letter_message():
                            conversations=conversations,
                            message_count=message_count)
 
-# 读写私信
 @message.route('/write_letter/<int:id>', methods=['GET','POST'])
 @login_required
 def write_letter(id):
@@ -185,7 +186,6 @@ def write_letter(id):
                            all = max(len(receive_conv),len(send_conv)),
                            form=form)
 
-# 删除会话
 @message.route('delete_letter/<int:id>')
 @login_required
 def delete_letter(id):

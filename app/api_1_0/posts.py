@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from flask import request, g, jsonify, abort, url_for, current_app
 from .. import db
 from ..models import Post, Permission
@@ -18,7 +21,7 @@ REST 架构 API 中使用的 HTTP 请求方法：
     DELETE ---- 资源集合的URL ---- 删除目标集合的所有资源 ---- 200
 """
 
-# 文章资源get请求
+
 @api.route('/posts/')
 def get_posts():
     # posts = Post.query.all()
@@ -47,7 +50,6 @@ def get_post(id):
     post = Post.query.get_or_404(id)
     return jsonify(post.to_json())
 
-# post请求
 @api.route('/posts/', methods=['POST'])
 @permission_required(Permission.WRITE_ARTICLES)
 def new_post():
@@ -57,7 +59,6 @@ def new_post():
     db.session.commit()
     return jsonify(post.to_json()), 201, {'Location': url_for('api.get_post',id=post.id, _external=True)}
 
-# put请求
 @api.route('/posts/<int:id>', methods=['PUT'])
 @permission_required(Permission.WRITE_ARTICLES)
 def edit_post(id):

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,12 +19,10 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SUBJECT_PREFIX = '[简单]'
     MAIL_SENDER = '简单管理员'
-    # 管理员邮箱
     ADMINMAIL = os.environ.get('ADMIN_MAIL') or '15152347277@163.com'
 
-    # 分页
     POSTS_PER_PAGE = 10
-    # 关注者分页
+
     FOLLOWERS_PER_PAGE = 50
     # 评论分页
     COMMENTS_PER_PAGE = 20
@@ -39,24 +39,20 @@ class Config:
         pass
 
 class DevelopmentConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-                              'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     DEBUG = True
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data.sqlite')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
 
     @classmethod
     def init_app(cls, app):
         Config.init_app(app)
 
-        # 把错误发送管理员
         import logging
         from logging.handlers import SMTPHandler
         credentials = None
@@ -76,20 +72,15 @@ class ProductionConfig(Config):
         app.logger.addHandler(mail_handler)
 
 class HerokuConfig(ProductionConfig):
-    """
-    Heroku中，日志必须写入 stdout 或 stderr
-    直接为Heroku新建配置类，以ProductionConfig为基类
-    """
     SSL_DISABLE = bool(os.environ.get('SSL_DISABLE'))
 
     @classmethod
     def init_app(cls, app):
         ProductionConfig.init_app(app)
 
-        # 处理代理服务器首部
         from werkzeug.contrib.fixers import ProxyFix
         app.wsgi_app = ProxyFix(app.wsgi_app)
-        # 输出到stderr
+
         import logging
         from logging import StreamHandler
         file_handler = StreamHandler()

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
@@ -36,7 +39,7 @@ class RegisterForm(FlaskForm):
         if User.query.filter_by(nickname=field.data).first():
             raise ValidationError('昵称已经存在。')
 
-# 更改密码表单
+
 class ChangePasswordForm(FlaskForm):
     old_password = PasswordField('Old password', validators=[DataRequired()])
     password = PasswordField('New password', validators=[

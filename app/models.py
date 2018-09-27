@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import datetime
 from flask_login import UserMixin, AnonymousUserMixin
 from flask import current_app, request, url_for

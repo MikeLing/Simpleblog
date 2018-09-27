@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 from flask import g
 from flask_login import login_required, current_user
@@ -11,7 +14,6 @@ from ..user.forms import SearchForm
 from .forms import NoticeForm
 
 
-# 用户最后一次访问时间,全文搜索
 @admin.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -21,7 +23,6 @@ def before_request():
     g.search_form = SearchForm()
 
 
-# 管理员页面
 @admin.route('/')
 @admin_required
 @login_required
@@ -46,7 +47,7 @@ def admin_comment():
                            page=page,
                            nums=len(comments),
                            title='管理评论')
-# 恢复评论
+
 @admin.route('/adminrecover/<int:id>')
 @login_required
 def admin_recover(id):
@@ -54,7 +55,8 @@ def admin_recover(id):
     comment.disabled = False
     db.session.add(comment)
     return redirect(url_for('admin.admin_comment'))
-# 删除评论
+
+
 @admin.route('/admindelate/<int:id>')
 @login_required
 def admin_delate(id):
@@ -80,7 +82,6 @@ def admin_post():
                            nums = len(posts),
                            title='管理文章')
 
-# 恢复文章
 @admin.route('/recoverpost/<int:id>')
 @login_required
 def recover_post(id):
@@ -88,7 +89,7 @@ def recover_post(id):
     post.disabled = False
     db.session.add(post)
     return redirect(url_for('admin.admin_post'))
-# 删除文章
+
 @admin.route('/delatepost/<int:id>')
 @login_required
 def delate_post(id):
@@ -97,7 +98,7 @@ def delate_post(id):
     db.session.add(post)
     return redirect(url_for('admin.admin_post'))
 
-# 添加公告
+
 @admin.route('/notice', methods=['GET','POST'])
 @login_required
 @admin_required
@@ -116,7 +117,7 @@ def add_notice():
                            title='网站公告',
                            form=form)
 
-# 获取所有用户
+
 @admin.route('/users')
 @login_required
 @admin_required

@@ -2,7 +2,6 @@ import unittest
 import os
 from config import basedir
 from app.models import User, Role, Permission, AnonymousUser
-from app import app, db
 
 
 class UserModelTestCase(unittest.TestCase):
@@ -37,7 +36,6 @@ class UserModelTestCase(unittest.TestCase):
         u2 = User(password='cat')
         self.assertTrue(u.password_hash != u2.password_hash)
 
-    # 测试角色和权限
     def test_roles_and_permissions(self):
         Role.insert_roles()
         u = User(email='john@example.com', password='cat')
@@ -47,3 +45,6 @@ class UserModelTestCase(unittest.TestCase):
     def test_anonymous_user(self):
         u = AnonymousUser()
         self.assertFalse(u.operation(Permission.FOLLOW))
+
+if __name__ == '__main__':
+    unittest.main()
