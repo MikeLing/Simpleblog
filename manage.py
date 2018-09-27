@@ -5,9 +5,6 @@ from app.models import User, Role, Post, Follow, Permission, Admin
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 import sys
-if sys.version_info.major < 3:
-    reload(sys)
-sys.setdefaultencoding('utf8')
 
 app = create_app(os.getenv('CONFIG') or 'default')
 manager = Manager(app)
